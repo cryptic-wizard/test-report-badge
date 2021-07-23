@@ -10,6 +10,6 @@ Scenario: Get Latest Jobs Returns Correct URL
 	When I get the latest jobs url
 	Then the latest jobs url is returned
 
-Scenario: Get Latest Test Run Returns Correct URL
+Scenario: Get Latest Test Returns Correct URL
 	When I get the latest test url
 	Then the latest test url is returned
