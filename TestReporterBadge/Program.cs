@@ -11,13 +11,15 @@ namespace TestReporterBadge
         private static string owner;
         private static string repo;
         private static string branch;
+        private static string job;
 
         static void Main(string[] args)
         {
             owner = "impolitetulip";
             repo = "test-reporter-badge";
             branch = "main";
-            GithubApi.GetLatestWorkflowRun(owner, repo, branch);
+            job = "Specflow Tests";
+            GithubApi.GetLatestTestUrl(owner, repo, branch, job);
         }
     }
 }
