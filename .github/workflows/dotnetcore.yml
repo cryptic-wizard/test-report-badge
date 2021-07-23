@@ -20,4 +20,27 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=TestExecution.trx"
+
+    - name: Generate TRX Test Report
+      if: success() || failure()
+      env:
+        TEST_RESULTS_PATH: "TestReporterBadgeTest/TestResults/*.trx"
+      uses: dorny/test-reporter@v1
+      with:
+        name: Specflow Tests
+        path: TestReporterBadgeTest/TestResults/*.trx
+        reporter: dotnet-trx
+    - name: Generate Specflow Test Report
+      if: success() || failure()
+      env:
+        TEST_RESULTS_PATH: "TestReporterBadgeTest/bin/Debug/netcoreapp3.1"
+      run: |
+        dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
+        livingdoc test-assembly ${TEST_RESULTS_PATH}/TestReporterBadgeTest.dll -t ${TEST_RESULTS_PATH}/TestExecution.json
+    - name: Publish Specflow Test Report
+      if: success() || failure()
+      uses: actions/upload-artifact@v2
+      with:
+        name: TestReporterBadgeTestReport
+        path: LivingDoc.html
