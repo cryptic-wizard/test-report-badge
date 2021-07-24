@@ -6,13 +6,25 @@ using System.Text.RegularExpressions;
 
 namespace TestReporterBadge
 {
-    public static class GithubApi
+    public class GithubApiClient
     {
-        public static string GetLatestJobsUrl(string owner, string repo, string branch = null)
+        public string org;
+        public string owner;
+        public string repo;
+        public string user;
+        public string branch;
+        public string job;
+
+        RestClient client = new RestClient();
+
+        public GithubApiClient()
         {
-            RestClient client = new RestClient();
-            client.BaseUrl = new Uri("https://api.github.com/");
-            RestRequest request = new RestRequest("repos/" + owner + '/' + repo + "/actions/runs");
+
+        }
+
+        public string GetLatestJobsUrl()
+        {
+            RestRequest request = new RestRequest("https://api.github.com/repos/" + owner + '/' + repo + "/actions/runs");
             IRestResponse response;
 
             try
@@ -60,12 +72,9 @@ namespace TestReporterBadge
             return null;
         }
 
-        public static string GetLatestTestUrl(string owner, string repo, string branch, string job)
+        public string GetLatestTestUrl()
         {
-            string jobsUrl = GetLatestJobsUrl(owner, repo, branch);
-
-            RestClient client = new RestClient();
-            //client.BaseUrl = new Uri("https://api.github.com/");
+            string jobsUrl = GetLatestJobsUrl();
             RestRequest request = new RestRequest(jobsUrl);
             IRestResponse response;
 
@@ -104,12 +113,9 @@ namespace TestReporterBadge
             return null;
         }
 
-        public static string GetLatestTestHtmlUrl(string owner, string repo, string branch, string job)
+        public string GetLatestTestHtmlUrl()
         {
-            string jobsUrl = GetLatestJobsUrl(owner, repo, branch);
-
-            RestClient client = new RestClient();
-            //client.BaseUrl = new Uri("https://api.github.com/");
+            string jobsUrl = GetLatestJobsUrl();
             RestRequest request = new RestRequest(jobsUrl);
             IRestResponse response;
 
@@ -148,12 +154,9 @@ namespace TestReporterBadge
             return null;
         }
 
-        public static string GetLatestTestBadgeUrl(string owner, string repo, string branch, string job)
+        public string GetLatestTestBadgeUrl()
         {
-            string checkRunsUrl = GetLatestTestUrl(owner, repo, branch, job);
-
-            RestClient client = new RestClient();
-            //client.BaseUrl = new Uri("https://api.github.com/");
+            string checkRunsUrl = GetLatestTestUrl();
             RestRequest request = new RestRequest(checkRunsUrl);
             IRestResponse response;
 

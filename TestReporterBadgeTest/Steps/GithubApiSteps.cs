@@ -9,12 +9,8 @@ namespace TestReporterBadgeTest.Steps
     [Binding]
     public sealed class GithubApiSteps
     {
-        private string org;
-        private string owner;
-        private string repo;
-        private string user;
-        private string branch;
-        private string job;
+        private GithubApiClient githubApiClient = new GithubApiClient();
+
         private string badgeUrl;
         private string jobsUrl;
         private string htmlUrl;
@@ -25,15 +21,17 @@ namespace TestReporterBadgeTest.Steps
         [BeforeScenario]
         public void BeforeScenario()
         {
-            org = null;
-            owner = null;
-            repo = null;
-            user = null;
-            branch = null;
-            job = null;
+            githubApiClient.org = null;
+            githubApiClient.owner = null;
+            githubApiClient.repo = null;
+            githubApiClient.user = null;
+            githubApiClient.branch = null;
+            githubApiClient.job = null;
+
             jobsUrl = null;
             htmlUrl = null;
             badgeUrl = null;
+            checkRunsUrl = null;
         }
 
         [AfterScenario]
@@ -49,37 +47,37 @@ namespace TestReporterBadgeTest.Steps
         [Given(@"the owner name is (.*)")]
         public void GivenTheOwnerNameIsX(string owner)
         {
-            this.owner = owner;
+            githubApiClient.owner = owner;
         }
 
         [Given(@"the job name is (.*)")]
         public void GivenTheJobNameIsX(string job)
         {
-            this.job = job;
+            githubApiClient.job = job;
         }
 
         [Given(@"the repo name is (.*)")]
         public void GivenTheRepositoryNameIsX(string repo)
         {
-            this.repo = repo;
+            githubApiClient.repo = repo;
         }
 
         [Given(@"the branch name is (.*)")]
         public void GivenTheBranchNameIsX(string branch)
         {
-            this.branch = branch;
+            githubApiClient.branch = branch;
         }
 
         [Given(@"the user name is (.*)")]
         public void GivenTheUserNameIsX(string user)
         {
-            this.user = user;
+            githubApiClient.user = user;
         }
 
         [Given(@"the org name is (.*)")]
         public void GivenTheOrgNameIsX(string org)
         {
-            this.org = org;
+            githubApiClient.org = org;
         }
 
         #endregion
@@ -89,25 +87,25 @@ namespace TestReporterBadgeTest.Steps
         [When(@"I get the latest jobs url")]
         public void WhenIGetTheLatestJobsUrl()
         {
-            jobsUrl = GithubApi.GetLatestJobsUrl(owner, repo, branch);
+            jobsUrl = githubApiClient.GetLatestJobsUrl();
         }
 
         [When(@"I get the latest test url")]
         public void WhenIGetTheLatestTestUrl()
         {
-            checkRunsUrl = GithubApi.GetLatestTestUrl(owner, repo, branch, job);
+            checkRunsUrl = githubApiClient.GetLatestTestUrl();
         }
 
         [When(@"I get the latest test html url")]
         public void WhenIGetTheLatestTestHtmlUrl()
         {
-            htmlUrl = GithubApi.GetLatestTestHtmlUrl(owner, repo, branch, job);
+            htmlUrl = githubApiClient.GetLatestTestHtmlUrl();
         }
 
         [When(@"I get the latest test badge url")]
         public void WhenIGetTheLatestTestBadgeUrl()
         {
-            badgeUrl = GithubApi.GetLatestTestBadgeUrl(owner, repo, branch, job);
+            badgeUrl = githubApiClient.GetLatestTestBadgeUrl();
         }
 
 
@@ -120,8 +118,8 @@ namespace TestReporterBadgeTest.Steps
         {
             Assert.IsNotNull(jobsUrl);
             Console.WriteLine(jobsUrl);
-            Assert.IsTrue(jobsUrl.Contains(owner), "ERROR - Jobs URL did not contain owner");
-            Assert.IsTrue(jobsUrl.Contains(repo), "ERROR - Jobs URL did not contain repo");
+            Assert.IsTrue(jobsUrl.Contains(githubApiClient.owner), "ERROR - Jobs URL did not contain owner");
+            Assert.IsTrue(jobsUrl.Contains(githubApiClient.repo), "ERROR - Jobs URL did not contain repo");
             Assert.IsTrue(jobsUrl.Contains("jobs"), "ERROR - Jobs URL did not contain jobs");
         }
 
@@ -130,8 +128,8 @@ namespace TestReporterBadgeTest.Steps
         {
             Assert.IsNotNull(checkRunsUrl);
             Console.WriteLine(checkRunsUrl);
-            Assert.IsTrue(checkRunsUrl.Contains(owner), "ERROR - Check runs URL did not contain owner");
-            Assert.IsTrue(checkRunsUrl.Contains(repo), "ERROR - Check runs URL did not contain repo");
+            Assert.IsTrue(checkRunsUrl.Contains(githubApiClient.owner), "ERROR - Check runs URL did not contain owner");
+            Assert.IsTrue(checkRunsUrl.Contains(githubApiClient.repo), "ERROR - Check runs URL did not contain repo");
             Assert.IsTrue(checkRunsUrl.Contains("check-runs"), "ERROR - Check runs URL did not contain check-runs");
         }
 
@@ -140,8 +138,8 @@ namespace TestReporterBadgeTest.Steps
         {
             Assert.IsNotNull(htmlUrl);
             Console.WriteLine(htmlUrl);
-            Assert.IsTrue(htmlUrl.Contains(owner), "ERROR - HTML URL did not contain owner");
-            Assert.IsTrue(htmlUrl.Contains(repo), "ERROR - HTML URL did not contain repo");
+            Assert.IsTrue(htmlUrl.Contains(githubApiClient.owner), "ERROR - HTML URL did not contain owner");
+            Assert.IsTrue(htmlUrl.Contains(githubApiClient.repo), "ERROR - HTML URL did not contain repo");
             Assert.IsTrue(htmlUrl.Contains("runs"), "ERROR - HTML URL did not contain runs");
         }
 
@@ -152,7 +150,6 @@ namespace TestReporterBadgeTest.Steps
             Console.WriteLine(badgeUrl);
             Assert.IsTrue(badgeUrl.Contains("img.shields.io/badge"), "ERROR - Badge URL did not contain img.shields.io/badge");
         }
-
 
         #endregion
     }

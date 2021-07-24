@@ -7,7 +7,6 @@ namespace TestReporterBadge
 {
     class Program
     {
-
         private static string owner;
         private static string repo;
         private static string branch;
@@ -15,11 +14,14 @@ namespace TestReporterBadge
 
         static void Main(string[] args)
         {
-            owner = "impolitetulip";
-            repo = "test-reporter-badge";
-            branch = "main";
-            job = "Specflow Tests";
-            GithubApi.GetLatestTestBadgeUrl(owner, repo, branch, job);
+            GithubApiClient githubApiClient = new GithubApiClient();
+
+            githubApiClient.owner = "impolitetulip";
+            githubApiClient.repo = "test-reporter-badge";
+            githubApiClient.branch = "main";
+            githubApiClient.job = "Specflow Tests";
+
+            githubApiClient.GetLatestTestBadgeUrl();
         }
     }
 }
