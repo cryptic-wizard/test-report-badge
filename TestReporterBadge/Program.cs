@@ -19,7 +19,7 @@ namespace TestReporterBadge
             repo = "test-reporter-badge";
             branch = "main";
             job = "Specflow Tests";
-            GithubApi.GetLatestTestUrl(owner, repo, branch, job);
+            GithubApi.GetLatestTestBadgeUrl(owner, repo, branch, job);
         }
     }
 }

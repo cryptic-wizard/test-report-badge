@@ -1,4 +1,5 @@
 ﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using TechTalk.SpecFlow;
 using TestReporterBadge;
@@ -14,8 +15,10 @@ namespace TestReporterBadgeTest.Steps
         private string user;
         private string branch;
         private string job;
+        private string badgeUrl;
         private string jobsUrl;
-        private string testUrl;
+        private string htmlUrl;
+        private string checkRunsUrl;
 
         #region ScenarioSteps
 
@@ -29,6 +32,8 @@ namespace TestReporterBadgeTest.Steps
             branch = null;
             job = null;
             jobsUrl = null;
+            htmlUrl = null;
+            badgeUrl = null;
         }
 
         [AfterScenario]
@@ -90,8 +95,21 @@ namespace TestReporterBadgeTest.Steps
         [When(@"I get the latest test url")]
         public void WhenIGetTheLatestTestUrl()
         {
-            testUrl = GithubApi.GetLatestTestUrl(owner, repo, branch, job);
+            checkRunsUrl = GithubApi.GetLatestTestUrl(owner, repo, branch, job);
         }
+
+        [When(@"I get the latest test html url")]
+        public void WhenIGetTheLatestTestHtmlUrl()
+        {
+            htmlUrl = GithubApi.GetLatestTestHtmlUrl(owner, repo, branch, job);
+        }
+
+        [When(@"I get the latest test badge url")]
+        public void WhenIGetTheLatestTestBadgeUrl()
+        {
+            badgeUrl = GithubApi.GetLatestTestBadgeUrl(owner, repo, branch, job);
+        }
+
 
         #endregion
 
@@ -101,6 +119,7 @@ namespace TestReporterBadgeTest.Steps
         public void ThenTheLatestJobsUrlIsReturned()
         {
             Assert.IsNotNull(jobsUrl);
+            Console.WriteLine(jobsUrl);
             Assert.IsTrue(jobsUrl.Contains(owner), "ERROR - Jobs URL did not contain owner");
             Assert.IsTrue(jobsUrl.Contains(repo), "ERROR - Jobs URL did not contain repo");
             Assert.IsTrue(jobsUrl.Contains("jobs"), "ERROR - Jobs URL did not contain jobs");
@@ -109,11 +128,31 @@ namespace TestReporterBadgeTest.Steps
         [Then(@"the latest test url is returned")]
         public void ThenTheLatestTestUrlIsReturned()
         {
-            Assert.IsNotNull(testUrl);
-            Assert.IsTrue(testUrl.Contains(owner), "ERROR - Test URL did not contain owner");
-            Assert.IsTrue(testUrl.Contains(repo), "ERROR - Test URL did not contain repo");
-            Assert.IsTrue(testUrl.Contains("runs"), "ERROR - Test URL did not contain runs");
+            Assert.IsNotNull(checkRunsUrl);
+            Console.WriteLine(checkRunsUrl);
+            Assert.IsTrue(checkRunsUrl.Contains(owner), "ERROR - Check runs URL did not contain owner");
+            Assert.IsTrue(checkRunsUrl.Contains(repo), "ERROR - Check runs URL did not contain repo");
+            Assert.IsTrue(checkRunsUrl.Contains("check-runs"), "ERROR - Check runs URL did not contain check-runs");
         }
+
+        [Then(@"the latest test html url is returned")]
+        public void ThenTheLatestTestHtmlUrlIsReturned()
+        {
+            Assert.IsNotNull(htmlUrl);
+            Console.WriteLine(htmlUrl);
+            Assert.IsTrue(htmlUrl.Contains(owner), "ERROR - HTML URL did not contain owner");
+            Assert.IsTrue(htmlUrl.Contains(repo), "ERROR - HTML URL did not contain repo");
+            Assert.IsTrue(htmlUrl.Contains("runs"), "ERROR - HTML URL did not contain runs");
+        }
+
+        [Then(@"the latest test badge url is returned")]
+        public void ThenTheLatestTestBadgeUrlIsReturned()
+        {
+            Assert.IsNotNull(badgeUrl);
+            Console.WriteLine(badgeUrl);
+            Assert.IsTrue(badgeUrl.Contains("img.shields.io/badge"), "ERROR - Badge URL did not contain img.shields.io/badge");
+        }
+
 
         #endregion
     }
