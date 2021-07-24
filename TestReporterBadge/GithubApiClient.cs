@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using RestSharp;
 using System;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace TestReporterBadge
@@ -181,6 +182,43 @@ namespace TestReporterBadge
             }
 
             return null;
+        }
+
+        public string GetReadMeContents()
+        {
+            string readmeString = "https://api.github.com/repos/" + owner + '/' + repo + "/contents/README.md";
+            RestRequest request = new RestRequest(readmeString);
+            IRestResponse restResponse = client.Get(request);
+
+            if (restResponse.StatusCode != System.Net.HttpStatusCode.OK)
+            {
+                Console.WriteLine("ERROR - HTTP status code = " + restResponse.StatusCode.ToString());
+                return null;
+            }
+
+            try
+            {
+                JObject jsonReadme = JsonConvert.DeserializeObject<JObject>(restResponse.Content);
+                byte[] rawReadme = Convert.FromBase64String(jsonReadme.SelectToken("content").ToString());
+                string readme = Encoding.UTF8.GetString(rawReadme);
+                return readme;
+            }
+            catch (Exception)
+            {
+
+            }
+
+            return null;
+        }
+
+        public bool SetReadMeContents()
+        {
+
+
+
+
+
+            return false;
         }
     }
 }

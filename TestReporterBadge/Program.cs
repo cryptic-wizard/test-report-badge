@@ -21,7 +21,7 @@ namespace TestReporterBadge
             githubApiClient.branch = "main";
             githubApiClient.job = "Specflow Tests";
 
-            githubApiClient.GetLatestTestBadgeUrl();
+            githubApiClient.GetReadMeContents();
         }
     }
 }
