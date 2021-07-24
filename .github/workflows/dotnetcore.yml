@@ -37,10 +37,12 @@ jobs:
         TEST_RESULTS_PATH: "TestReporterBadgeTest/bin/Debug/netcoreapp3.1"
       run: |
         dotnet tool install --global SpecFlow.Plus.LivingDoc.CLI
-        livingdoc test-assembly ${TEST_RESULTS_PATH}/TestReporterBadgeTest.dll -t ${TEST_RESULTS_PATH}/TestExecution.json
+        livingdoc test-assembly ${TEST_RESULTS_PATH}/TestReporterBadgeTest.dll -t ${TEST_RESULTS_PATH}/TestExecution.json -o SpecflowTestReport.html
     - name: Publish Specflow Test Report
       if: success() || failure()
       uses: actions/upload-artifact@v2
       with:
-        name: TestReporterBadgeTestReport
-        path: LivingDoc.html
+        name: TestReporterBadgeTestReports
+        path: |
+          SpecflowTestReport.html
+          TestReporterBadgeTest/TestResults/*.trx
